@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Buscador de Pokémon</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="fonts.css">
+</head>
+
+<body>
+
+    <h1 id="titulo-pokedex">POKEDEX</h1>
+
+    <input type="text" id="pokemonInput" placeholder="Ingrese el nombre del Pokémon" required>
+    <button id="botonBuscar" onclick="buscarPokemon()">Buscar</button>
+    <button id="botonEliminar" onclick="eliminarTodo()">Refrescar</button>
+
+    <ul id="listaPokemones">
+    </ul>
+
+    <script>
+        async function buscarPokemon() {
+            const nombre = document.getElementById('pokemonInput').value.toLowerCase();
+            if (!nombre) {
+                alert('Por favor, ingresa un nombre.');
+                return;
+            }
+
+            try {
+                const respuesta = await fetch(`https://pokeapi.co/api/v2/pokemon/${nombre}`);
+                if (!respuesta.ok) {
+                    throw new Error('Pokémon no encontrado');
+                }
+                const datos = await respuesta.json();
+                const tipos = datos.types.map(tipoInfo => tipoInfo.type.name).join(', ');
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    
+                    <div class="info">
+                        <p><strong>Nombre:</strong> ${datos.name.toUpperCase()}</p>
+                        <p><strong>ID:</strong> ${datos.id}</p>
+                        <p><strong>Tipos:</strong> ${tipos}</p>
+                        <p><strong>Peso:</strong> ${datos.weight / 10} kg</p>
+                        <p><strong>Altura:</strong> ${datos.height / 10} m</p>
+                        <p><strong>Habilidades:</strong> ${datos.abilities.map(ability => ability.ability.name).join(', ')}</p>
+                        <p><strong>"Normal:"</strong> <img src="${datos.sprites.front_default}" alt="${datos.name}"></p>
+                        <p><strong>Shiny:</strong> <img src="${datos.sprites.front_shiny}" alt="${datos.name}"></p>
+                        <p><strong>espalda:</strong> <img src="${datos.sprites.back_default}" alt="${datos.name}"></p>
+                    </div>
+                    <input type="checkbox" onchange="marcarCapturado(this)">
+                `;
+
+                document.getElementById('listaPokemones').appendChild(li);
+                document.getElementById('pokemonInput').value = '';
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+        function eliminarTodo() {
+            const lista = document.getElementById('listaPokemones');
+            while (lista.firstChild) {
+                lista.removeChild(lista.firstChild);
+            }
+        }
+    </script>
+
+</body>
+
+</html>

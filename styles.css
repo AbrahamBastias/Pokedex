@@ -1,0 +1,85 @@
+body {
+    background: #424242 url(img/body_bg.png);
+    color: #ffffff;
+    font-family: 'Pokemon Hollow', sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+#titulo-pokedex {
+    font-family: 'Pokemon Solid', sans-serif;
+    color: #FFCB05;
+    text-shadow: 3px 3px 0 #3B4CCA;
+    font-size: 4rem;
+    margin-top: 20px;
+}
+
+#pokemonInput {
+    font-family: 'Pokemon Solid', sans-serif;
+    background-color: #3B4CCA;
+    color: #FFCB05;
+    font-size: 1rem;
+    padding: 14px;
+    margin: 25px;
+    width: 300px;
+    border: 2px solid #FFCB05;
+    border-radius: 8px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+#botonBuscar {
+    font-family: 'Pokemon Solid', sans-serif;
+    background-color: #FFCB05;
+    color: #3B4CCA;
+    border: 2px solid #3B4CCA;
+    border-radius: 8px;
+    padding: 12px 22px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#botonBuscar:hover {
+    background-color: #3B4CCA;
+    color: #FFCB05;
+}
+
+#botonEliminar {
+    font-family: 'Pokemon Solid', sans-serif;
+    background-color: #FFCB05;
+    color: #3B4CCA;
+    border: 2px solid #3B4CCA;
+    border-radius: 8px;
+    padding: 12px 22px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#botonEliminar:hover {
+    background-color: #3B4CCA;
+    color: #FFCB05;
+}
+
+#listaPokemones {
+    font-family: 'Pokemon Solid', sans-serif;
+    color: #FFCB05;
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+}
+
+#pokemonInfo {
+    font-family: 'Pokemon Solid', sans-serif;
+    background-color: #3B4CCA;
+    border-radius: 12px;
+    color: #FFCB05;
+    margin: 30px auto;
+    padding: 20px;
+    width: 80%;
+    max-width: 600px;
+    line-height: 1.8;
+}
