@@ -33,23 +33,42 @@
                     throw new Error('Pokémon no encontrado');
                 }
                 const datos = await respuesta.json();
-                const tipos = datos.types.map(tipoInfo => tipoInfo.type.name).join(', ');
+
+                const especieRespuesta = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${nombre}`);
+                const especie = await especieRespuesta.json();
+
+                const nombreEsp = especie.names.find(n => n.language.name === "es")?.name || datos.name;
+                const descripcion = especie.flavor_text_entries.find(entry => entry.language.name === "es")?.flavor_text.replace(/\f/g, ' ') || "Descripción no disponible";
+
+                const tiposPromises = datos.types.map(async tipoInfo => {
+                    const tipoRespuesta = await fetch(tipoInfo.type.url);
+                    const tipoDatos = await tipoRespuesta.json();
+                    return tipoDatos.names.find(n => n.language.name === "es")?.name || tipoInfo.type.name;
+                });
+                const tipos = await Promise.all(tiposPromises);
+
+                const habilidadesPromises = datos.abilities.map(async habilidadInfo => {
+                    const habilidadRespuesta = await fetch(habilidadInfo.ability.url);
+                    const habilidadDatos = await habilidadRespuesta.json();
+                    return habilidadDatos.names.find(n => n.language.name === "es")?.name || habilidadInfo.ability.name;
+                });
+                const habilidades = await Promise.all(habilidadesPromises);
+
                 const li = document.createElement('li');
                 li.innerHTML = `
-                    
-                    <div class="info">
-                        <p><strong>Nombre:</strong> ${datos.name.toUpperCase()}</p>
-                        <p><strong>ID:</strong> ${datos.id}</p>
-                        <p><strong>Tipos:</strong> ${tipos}</p>
-                        <p><strong>Peso:</strong> ${datos.weight / 10} kg</p>
-                        <p><strong>Altura:</strong> ${datos.height / 10} m</p>
-                        <p><strong>Habilidades:</strong> ${datos.abilities.map(ability => ability.ability.name).join(', ')}</p>
-                        <p><strong>"Normal:"</strong> <img src="${datos.sprites.front_default}" alt="${datos.name}"></p>
-                        <p><strong>Shiny:</strong> <img src="${datos.sprites.front_shiny}" alt="${datos.name}"></p>
-                        <p><strong>espalda:</strong> <img src="${datos.sprites.back_default}" alt="${datos.name}"></p>
-                    </div>
-                    <input type="checkbox" onchange="marcarCapturado(this)">
-                `;
+            <div class="info">
+                <p><strong>Nombre:</strong> ${nombreEsp.toUpperCase()}</p>
+                <p><strong>ID:</strong> ${datos.id}</p>
+                <p><strong>Tipo:</strong> ${tipos.join(', ')}</p>
+                <p><strong>Peso:</strong> ${datos.weight / 10} kg</p>
+                <p><strong>Altura:</strong> ${datos.height / 10} m</p>
+                <p><strong>Habilidades:</strong> ${habilidades.join(', ')}</p>
+                <p><strong>Descripción:</strong> ${descripcion}</p>
+                <p><strong>Normal:</strong> <img src="${datos.sprites.front_default}" alt="${datos.name}"></p>
+                <p><strong>Shiny:</strong> <img src="${datos.sprites.front_shiny}" alt="${datos.name}"></p>
+            </div>
+            <input type="checkbox" onchange="marcarCapturado(this)">
+        `;
 
                 document.getElementById('listaPokemones').appendChild(li);
                 document.getElementById('pokemonInput').value = '';
@@ -57,6 +76,7 @@
                 alert(error.message);
             }
         }
+
         function eliminarTodo() {
             const lista = document.getElementById('listaPokemones');
             while (lista.firstChild) {
