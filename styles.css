@@ -69,7 +69,8 @@ body {
     color: #FFCB05;
     text-align: center;
     margin-top: 40px;
-    padding: 20px;
+    padding: 0px;
+    list-style: none;
 }
 
 #pokemonInfo {
@@ -82,4 +83,30 @@ body {
     width: 80%;
     max-width: 600px;
     line-height: 1.8;
+}
+
+.tarjeta-pokemon {
+    background-color: #3B4CCA;
+    /* Color azul clásico de Pokémon */
+    border: 3px solid #FFCB05;
+    /* Amarillo Pokémon */
+    border-radius: 16px;
+    padding: 20px;
+    margin: 20px auto;
+    width: 90%;
+    max-width: 600px;
+    color: #FFCB05;
+    text-align: left;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    font-family: 'Pokemon Solid', sans-serif;
+}
+
+.tarjeta-pokemon img {
+    max-width: 120px;
+    height: auto;
+}
+
+.tarjeta-pokemon p {
+    margin: 10px 0;
+    font-size: 1rem;
 }
