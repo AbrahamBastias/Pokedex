@@ -56,19 +56,26 @@
 
                 const li = document.createElement('li');
                 li.innerHTML = `
-            <div class="tarjeta-pokemon">
-                <p><strong>Nombre:</strong> ${nombreEsp.toUpperCase()}</p>
-                <p><strong>ID:</strong> ${datos.id}</p>
+                <div class="tarjeta-pokemon" onclick="toggleDetalle(this)">
+                <div class="vista-compacta">
+                <h3>${nombreEsp.toUpperCase()}</h3>
+                <img class="imagen-grande" src="${datos.sprites.other['official-artwork'].front_default}" alt="${datos.name}">
                 <p><strong>Tipo:</strong> ${tipos.join(', ')}</p>
+                    </div>
+                <div class="vista-detallada oculto">
+                <p><strong>ID:</strong> ${datos.id}</p>
                 <p><strong>Peso:</strong> ${datos.weight / 10} kg</p>
                 <p><strong>Altura:</strong> ${datos.height / 10} m</p>
                 <p><strong>Habilidades:</strong> ${habilidades.join(', ')}</p>
                 <p><strong>Descripción:</strong> ${descripcion}</p>
-                <p><strong>Normal:</strong> <img src="${datos.sprites.front_default}" alt="${datos.name}"></p>
-                <p><strong>Shiny:</strong> <img src="${datos.sprites.front_shiny}" alt="${datos.name}"></p>
-            </div>
-            <input type="checkbox" onchange="marcarCapturado(this)">
-        `;
+                <div>
+                <p><strong>Shiny:</strong></p>
+                <img class="imagen-shiny" src="${datos.sprites.front_shiny}" alt="${datos.name} shiny">
+                    </div>
+                <label><input type="checkbox" onchange="marcarCapturado(this)"> Capturado</label>
+        </div>
+    </div>
+`;
 
                 document.getElementById('listaPokemones').appendChild(li);
                 document.getElementById('pokemonInput').value = '';
@@ -83,6 +90,11 @@
                 lista.removeChild(lista.firstChild);
             }
         }
+        function toggleDetalle(elemento) {
+            const detalle = elemento.querySelector('.vista-detallada');
+            detalle.classList.toggle('oculto');
+        }
+
     </script>
 
 </body>

@@ -65,13 +65,13 @@ body {
 }
 
 #listaPokemones {
-    font-family: 'Pokemon Solid', sans-serif;
-    color: #FFCB05;
-    text-align: center;
-    margin-top: 40px;
-    padding: 0px;
-    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 40px;
 }
+
 
 #pokemonInfo {
     font-family: 'Pokemon Solid', sans-serif;
@@ -87,26 +87,43 @@ body {
 
 .tarjeta-pokemon {
     background-color: #3B4CCA;
-    /* Color azul clásico de Pokémon */
     border: 3px solid #FFCB05;
-    /* Amarillo Pokémon */
     border-radius: 16px;
-    padding: 20px;
-    margin: 20px auto;
-    width: 90%;
-    max-width: 600px;
+    padding: 16px;
+    margin: 20px;
+    width: 280px;
     color: #FFCB05;
-    text-align: left;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
     font-family: 'Pokemon Solid', sans-serif;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    text-align: center;
+    display: inline-block;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.tarjeta-pokemon img {
-    max-width: 120px;
+.tarjeta-pokemon:hover {
+    transform: scale(1.03);
+}
+
+.imagen-grande {
+    width: 150px;
     height: auto;
+    margin: 8px 0;
 }
 
-.tarjeta-pokemon p {
-    margin: 10px 0;
-    font-size: 1rem;
+.imagen-shiny {
+    width: 150px;
+    height: auto;
+    margin: 8px 0;
+}
+
+
+.vista-detallada {
+    margin-top: 12px;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.oculto {
+    display: none;
 }
