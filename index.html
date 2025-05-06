@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <title>Buscador de Pokémon</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="fonts.css">
 </head>
 
 <body>
@@ -16,8 +15,7 @@
     <button id="botonBuscar" onclick="buscarPokemon()">Buscar</button>
     <button id="botonEliminar" onclick="eliminarTodo()">Refrescar</button>
 
-    <ul id="listaPokemones">
-    </ul>
+    <ul id="listaPokemones"></ul>
 
     <script>
         async function buscarPokemon() {
@@ -29,9 +27,7 @@
 
             try {
                 const respuesta = await fetch(`https://pokeapi.co/api/v2/pokemon/${nombre}`);
-                if (!respuesta.ok) {
-                    throw new Error('Pokémon no encontrado');
-                }
+                if (!respuesta.ok) throw new Error('Pokémon no encontrado');
                 const datos = await respuesta.json();
 
                 const especieRespuesta = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${nombre}`);
@@ -55,30 +51,33 @@
                 const habilidades = await Promise.all(habilidadesPromises);
 
                 const li = document.createElement('li');
+                li.classList.add("tarjeta-pokemon");
+
+                const tiposHTML = tipos.map(t => `<span class="tipo ${t}">${t}</span>`).join(' ');
+
                 li.innerHTML = `
-                <div class="tarjeta-pokemon" onclick="toggleDetalle(this)">
-                <div class="vista-compacta">
-                <h3>${nombreEsp.toUpperCase()}</h3>
-                <img class="imagen-grande" src="${datos.sprites.other['official-artwork'].front_default}" alt="${datos.name}">
-                <p><strong>Tipo:</strong> ${tipos.join(', ')}</p>
-                    </div>
-                <div class="vista-detallada oculto">
-                <p><strong>ID:</strong> ${datos.id}</p>
-                <p><strong>Peso:</strong> ${datos.weight / 10} kg</p>
-                <p><strong>Altura:</strong> ${datos.height / 10} m</p>
-                <p><strong>Habilidades:</strong> ${habilidades.join(', ')}</p>
-                <p><strong>Descripción:</strong> ${descripcion}</p>
-                <div>
-                <p><strong>Shiny:</strong></p>
-                <img class="imagen-shiny" src="${datos.sprites.front_shiny}" alt="${datos.name} shiny">
-                    </div>
-                <label><input type="checkbox" onchange="marcarCapturado(this)"> Capturado</label>
-        </div>
-    </div>
-`;
+          <div onclick="toggleDetalle(this)">
+            <div class="vista-compacta">
+              <h3>${nombreEsp.toUpperCase()}</h3>
+              <img class="imagen-grande" src="${datos.sprites.other['official-artwork'].front_default}" alt="${datos.name}">
+              <p><strong>Tipo:</strong> ${tiposHTML}</p>
+            </div>
+            <div class="vista-detallada oculto">
+              <p><strong>ID:</strong> ${datos.id}</p>
+              <p><strong>Peso:</strong> ${datos.weight / 10} kg</p>
+              <p><strong>Altura:</strong> ${datos.height / 10} m</p>
+              <p><strong>Habilidades:</strong> ${habilidades.join(', ')}</p>
+              <p><strong>Descripción:</strong> ${descripcion}</p>
+              <p><strong>Shiny:</strong></p>
+              <img class="imagen-shiny" src="${datos.sprites.front_shiny}" alt="${datos.name} shiny">
+              <br><label><input type="checkbox" onchange="marcarCapturado(this)"> Capturado</label>
+            </div>
+          </div>
+        `;
 
                 document.getElementById('listaPokemones').appendChild(li);
                 document.getElementById('pokemonInput').value = '';
+
             } catch (error) {
                 alert(error.message);
             }
@@ -90,11 +89,16 @@
                 lista.removeChild(lista.firstChild);
             }
         }
+
         function toggleDetalle(elemento) {
             const detalle = elemento.querySelector('.vista-detallada');
             detalle.classList.toggle('oculto');
         }
 
+        function marcarCapturado(checkbox) {
+            const tarjeta = checkbox.closest('.tarjeta-pokemon');
+            tarjeta.style.opacity = checkbox.checked ? 0.5 : 1;
+        }
     </script>
 
 </body>
