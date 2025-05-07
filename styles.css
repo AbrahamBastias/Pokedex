@@ -1,7 +1,5 @@
-/* ========== ESTILO GENERAL ========== */
 body {
-    background: #424242 url('img/body_bg.png') no-repeat center center fixed;
-    background-size: cover;
+    background: #424242 url(img/body_bg.png);
     color: #ffffff;
     font-family: 'Pokemon Hollow', sans-serif;
     text-align: center;
@@ -10,30 +8,24 @@ body {
     min-height: 100vh;
 }
 
-/* ========== TÍTULO ========== */
 #titulo-pokedex {
     font-family: 'Pokemon Solid', sans-serif;
     color: #FFCB05;
     text-shadow: 3px 3px 0 #3B4CCA;
     font-size: 4rem;
-    margin-top: 20px;
-    margin-bottom: 10px;
+    margin: 20px;
 }
 
-/* ========== INPUT Y BOTONES ========== */
 #pokemonInput {
     font-family: 'Pokemon Solid', sans-serif;
     background-color: #3B4CCA;
     color: #FFCB05;
-    font-size: 1rem;
     padding: 14px;
-    margin: 25px auto 10px;
     width: 300px;
+    font-size: 1rem;
     border: 2px solid #FFCB05;
     border-radius: 8px;
     text-align: center;
-    box-sizing: border-box;
-    display: block;
 }
 
 #botonBuscar,
@@ -45,9 +37,9 @@ body {
     border-radius: 8px;
     padding: 12px 22px;
     font-size: 1.2rem;
+    margin: 8px;
     cursor: pointer;
-    margin: 10px 5px;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: 0.3s ease;
 }
 
 #botonBuscar:hover,
@@ -56,7 +48,6 @@ body {
     color: #FFCB05;
 }
 
-/* ========== LISTA DE POKEMONES ========== */
 #listaPokemones {
     display: flex;
     flex-wrap: wrap;
@@ -65,7 +56,6 @@ body {
     padding: 40px;
 }
 
-/* ========== TARJETAS ========== */
 .tarjeta-pokemon {
     background-color: #3B4CCA;
     border: 3px solid #FFCB05;
@@ -76,138 +66,119 @@ body {
     font-family: 'Pokemon Solid', sans-serif;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
     text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
+    transition: transform 0.3s ease;
 }
 
 .tarjeta-pokemon:hover {
-    transform: scale(1.03);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
+    transform: scale(1.05);
 }
 
-/* ========== IMÁGENES ========== */
-.imagen-grande,
-.imagen-shiny {
+.imagen-grande {
     width: 150px;
     height: auto;
-    margin: 8px 0;
-    border-radius: 8px;
-    background-color: #ffffff10;
 }
 
-/* ========== DETALLES ========== */
+.imagen-shiny {
+    width: 100px;
+    height: auto;
+    margin-top: 8px;
+}
+
 .vista-detallada {
     margin-top: 12px;
     text-align: left;
     font-size: 0.9rem;
-    line-height: 1.5;
 }
 
 .oculto {
     display: none;
 }
 
-/* ========== TIPOS DE POKÉMON ========== */
+/* Tipos de Pokémon (colores personalizados) */
 .tipo {
-    display: inline-block;
     padding: 4px 10px;
-    margin: 2px 4px;
     border-radius: 12px;
-    color: white;
-    font-size: 0.8rem;
+    margin: 2px;
+    display: inline-block;
+    color: #fff;
     font-weight: bold;
-    text-shadow: 1px 1px 2px #000;
+    text-transform: capitalize;
 }
 
-/* ========== COLORES POR TIPO (ESPAÑOL) ========== */
-.tipo.Planta {
+.tipo.plant,
+.tipo.grass {
     background-color: #78C850;
 }
 
-.tipo.Fuego {
+.tipo.fire {
     background-color: #F08030;
 }
 
-.tipo.Agua {
+.tipo.water {
     background-color: #6890F0;
 }
 
-.tipo.Eléctrico {
+.tipo.electric {
     background-color: #F8D030;
     color: #000;
 }
 
-.tipo.Hielo {
+.tipo.ice {
     background-color: #98D8D8;
     color: #000;
 }
 
-.tipo.Lucha {
+.tipo.fighting {
     background-color: #C03028;
 }
 
-.tipo.Veneno {
+.tipo.poison {
     background-color: #A040A0;
 }
 
-.tipo.Tierra {
+.tipo.ground {
     background-color: #E0C068;
     color: #000;
 }
 
-.tipo.Volador {
+.tipo.flying {
     background-color: #A890F0;
 }
 
-.tipo.Psíquico {
+.tipo.psychic {
     background-color: #F85888;
 }
 
-.tipo.Bicho {
+.tipo.bug {
     background-color: #A8B820;
 }
 
-.tipo.Roca {
+.tipo.rock {
     background-color: #B8A038;
 }
 
-.tipo.Fantasma {
+.tipo.ghost {
     background-color: #705898;
 }
 
-.tipo.Dragón {
+.tipo.dragon {
     background-color: #7038F8;
 }
 
-.tipo.Siniestro {
+.tipo.dark {
     background-color: #705848;
 }
 
-.tipo.Acero {
+.tipo.steel {
     background-color: #B8B8D0;
     color: #000;
 }
 
-.tipo.Hada {
+.tipo.fairy {
     background-color: #EE99AC;
-    color: #000;
 }
 
-.tipo.Normal {
+.tipo.normal {
     background-color: #A8A878;
-}
-
-/* ========== RESPONSIVE (MÓVILES) ========== */
-@media (max-width: 600px) {
-    #pokemonInput {
-        width: 90%;
-    }
-
-    .tarjeta-pokemon {
-        width: 90%;
-    }
-
-    #listaPokemones {
-        padding: 20px 10px;
-    }
 }

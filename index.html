@@ -3,13 +3,13 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Buscador de Pokémon</title>
+    <title>Pokédex</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="fonts.css">
 </head>
 
 <body>
-
-    <h1 id="titulo-pokedex">POKEDEX</h1>
+    <h1 id="titulo-pokedex">POKÉDEX</h1>
 
     <input type="text" id="pokemonInput" placeholder="Ingrese el nombre del Pokémon" required>
     <button id="botonBuscar" onclick="buscarPokemon()">Buscar</button>
@@ -30,64 +30,60 @@
                 if (!respuesta.ok) throw new Error('Pokémon no encontrado');
                 const datos = await respuesta.json();
 
-                const especieRespuesta = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${nombre}`);
-                const especie = await especieRespuesta.json();
+                const especieRes = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${nombre}`);
+                const especie = await especieRes.json();
 
                 const nombreEsp = especie.names.find(n => n.language.name === "es")?.name || datos.name;
-                const descripcion = especie.flavor_text_entries.find(entry => entry.language.name === "es")?.flavor_text.replace(/\f/g, ' ') || "Descripción no disponible";
+                const descripcion = especie.flavor_text_entries.find(e => e.language.name === "es")?.flavor_text.replace(/\f/g, ' ') || "Descripción no disponible";
 
-                const tiposPromises = datos.types.map(async tipoInfo => {
-                    const tipoRespuesta = await fetch(tipoInfo.type.url);
-                    const tipoDatos = await tipoRespuesta.json();
-                    return tipoDatos.names.find(n => n.language.name === "es")?.name || tipoInfo.type.name;
-                });
-                const tipos = await Promise.all(tiposPromises);
+                const tipos = await Promise.all(datos.types.map(async t => {
+                    const tipoRes = await fetch(t.type.url);
+                    const tipoData = await tipoRes.json();
+                    const nombreTipo = tipoData.names.find(n => n.language.name === "es")?.name || t.type.name;
+                    const debilidades = tipoData.damage_relations.double_damage_from.map(tipo => tipo.name);
+                    return { nombre: nombreTipo, color: tipoData.name, debilidades };
+                }));
 
-                const habilidadesPromises = datos.abilities.map(async habilidadInfo => {
-                    const habilidadRespuesta = await fetch(habilidadInfo.ability.url);
-                    const habilidadDatos = await habilidadRespuesta.json();
-                    return habilidadDatos.names.find(n => n.language.name === "es")?.name || habilidadInfo.ability.name;
-                });
-                const habilidades = await Promise.all(habilidadesPromises);
+                const habilidades = await Promise.all(datos.abilities.map(async h => {
+                    const res = await fetch(h.ability.url);
+                    const data = await res.json();
+                    return data.names.find(n => n.language.name === "es")?.name || h.ability.name;
+                }));
 
                 const li = document.createElement('li');
-                li.classList.add("tarjeta-pokemon");
-
-                const tiposHTML = tipos.map(t => `<span class="tipo ${t}">${t}</span>`).join(' ');
-
                 li.innerHTML = `
-          <div onclick="toggleDetalle(this)">
-            <div class="vista-compacta">
-              <h3>${nombreEsp.toUpperCase()}</h3>
-              <img class="imagen-grande" src="${datos.sprites.other['official-artwork'].front_default}" alt="${datos.name}">
-              <p><strong>Tipo:</strong> ${tiposHTML}</p>
-            </div>
-            <div class="vista-detallada oculto">
-              <p><strong>ID:</strong> ${datos.id}</p>
-              <p><strong>Peso:</strong> ${datos.weight / 10} kg</p>
-              <p><strong>Altura:</strong> ${datos.height / 10} m</p>
-              <p><strong>Habilidades:</strong> ${habilidades.join(', ')}</p>
-              <p><strong>Descripción:</strong> ${descripcion}</p>
-              <p><strong>Shiny:</strong></p>
-              <img class="imagen-shiny" src="${datos.sprites.front_shiny}" alt="${datos.name} shiny">
-              <br><label><input type="checkbox" onchange="marcarCapturado(this)"> Capturado</label>
-            </div>
-          </div>
-        `;
+                    <div class="tarjeta-pokemon" onclick="toggleDetalle(this)">
+                        <div class="vista-compacta">
+                            <h3>${nombreEsp.toUpperCase()}</h3>
+                            <img class="imagen-grande" src="${datos.sprites.other['official-artwork'].front_default}" alt="${nombreEsp}">
+                            <p><strong>Tipo:</strong> ${tipos.map(t => `<span class="tipo ${t.color}">${t.nombre}</span>`).join(', ')}</p>
+                        </div>
+                        <div class="vista-detallada oculto">
+                            <p><strong>ID:</strong> ${datos.id}</p>
+                            <p><strong>Peso:</strong> ${datos.weight / 10} kg</p>
+                            <p><strong>Altura:</strong> ${datos.height / 10} m</p>
+                            <p><strong>Habilidades:</strong> ${habilidades.join(', ')}</p>
+                            <p><strong>Descripción:</strong> ${descripcion}</>
+                            <div>
+                                <p><strong>Shiny:</strong></p>
+                                <img class="imagen-shiny" src="${datos.sprites.front_shiny}" alt="${nombreEsp} shiny">
+                            </div>
+                            <p><strong>Débil contra:</strong> ${[...new Set(tipos.flatMap(t => t.debilidades))]
+                        .map(tipo => `<span class="tipo ${tipo}">${tipo}</span>`).join(', ')}</p>
+                            <label><input type="checkbox" onchange="marcarCapturado(this)"> Capturado</label>
+                        </div>
+                    </div>
+                `;
 
                 document.getElementById('listaPokemones').appendChild(li);
                 document.getElementById('pokemonInput').value = '';
-
             } catch (error) {
                 alert(error.message);
             }
         }
 
         function eliminarTodo() {
-            const lista = document.getElementById('listaPokemones');
-            while (lista.firstChild) {
-                lista.removeChild(lista.firstChild);
-            }
+            document.getElementById('listaPokemones').innerHTML = '';
         }
 
         function toggleDetalle(elemento) {
@@ -96,11 +92,9 @@
         }
 
         function marcarCapturado(checkbox) {
-            const tarjeta = checkbox.closest('.tarjeta-pokemon');
-            tarjeta.style.opacity = checkbox.checked ? 0.5 : 1;
+            checkbox.parentNode.parentNode.style.opacity = checkbox.checked ? 0.6 : 1;
         }
     </script>
-
 </body>
 
 </html>
